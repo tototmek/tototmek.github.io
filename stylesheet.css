@@ -1,20 +1,73 @@
+@font-face {
+    font-family: MooreComputer;
+    src: url(fonts/moorecomputer.ttf);
+}
+
 body {
-    background-color: #424242;
-    background-image: url('images/background.gif');
+    background-color: #212121;
+    color: #eeeeee;
+    font-family: Helvetica, Arial, sans-serif;
+    /* background-image: url('images/background.gif'); */
 }
 
 div.main {
     margin-left: auto;
     margin-right: auto;
-    background-color: #ffffff;
-    width: 960px;
+    width: 1100px;
+    border-color: #424242;
+    border-width: 1px;
+    border-style: solid;
+    padding: 20px;
 }
 
 h1 {
-    color: #42ff69;
-    margin-left: 20px;
+    font-family: MooreComputer;
+    color: #00ff00;
+}
+
+h4 {
+    color: #eeeeee;
+}
+
+ul {
+    list-style-type: circle;
+    color: #eeeeee;
 }
 
 p {
     color: #eeeeee;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:link {
+    color: #779b5a;
+}
+
+a:visited {
+    color: #ca845b;
+}
+
+a:hover {
+    color: #bff198;
+}
+
+a:active {
+    color: #eeeeee;
+}
+
+/* Three image containers (use 25% for four, and 50% for two, etc) */
+.column {
+    float: left;
+    width: 33.33%;
+    padding: 5px;
+}
+
+/* Clear floats after image containers */
+.row::after {
+    content: "";
+    clear: both;
+    display: table;
 }
