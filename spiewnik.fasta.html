@@ -13,7 +13,7 @@
 <div id="sidebar">
     <p class=main-heading>Śpiewnik.fasta</p>
     <div>
-    <div id="song-list">Ładowanie spisu piosenek...</div>
+    <div id="song-list"><div class="loader"></div></div>
     <p><a href=https://github.com/Bulia29/spiewnik>Repozytorium projektu</a></p>
     <p><a href=https://github.com/Bulia29/spiewnik/releases>Wersja pdf</a></p>
     <div class="song-list-spacer"></div>
@@ -35,8 +35,6 @@
         try {
             const resp = await fetch(manifestUrl);
             const files = await resp.json();
-            const listContainer = document.getElementById('song-list');
-            listContainer.innerHTML = '';
 
             for (const filePath of files["paths"]) {
                 await loadFastaFile(filePath);
@@ -51,6 +49,8 @@
                 });
             });
 
+            const listContainer = document.getElementById('song-list');
+            listContainer.innerHTML = '';
             addSongLinks()
 
         } catch (err) {
@@ -108,6 +108,7 @@
         // for (const paragraph of song.body.split("\n\n")) {
             lines = [];
             chords = [];
+            html += `<div class="song-body">`
             for (const paragraph_line of paragraph.split("\n").map(s => s.trim())) {
                 [line, chord] = paragraph_line.split("|").map(s => s.trim());
                 if (line == "-") {
@@ -134,6 +135,7 @@
             }
             html += `</div></div>`;
         }
+        html += `</div>`;
 
         container.innerHTML = html;
     }
