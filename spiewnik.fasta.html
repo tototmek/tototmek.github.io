@@ -116,6 +116,12 @@
                 }
                 lines.push(line);
                 if (chord) {
+                    chord = chord.replaceAll("+", "₊")
+                    chord = chord.replaceAll("sus2", "₂")
+                    chord = chord.replaceAll("sus4", "₄")
+                    chord = chord.replaceAll("7", "₇")
+                    chord = chord.replaceAll("add9", "₉")
+                    chord = chord.replaceAll(" ", " ") // short space
                     chords.push(chord);
                 } else {
                     chords.push("");
