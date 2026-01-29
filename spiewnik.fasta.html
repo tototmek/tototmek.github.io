@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Śpiewnik.fasta</title>
+    <link rel="stylesheet" href="spiewnik.fasta.css">
+</head>
+<body>
+
+<div id="sidebar">
+    <h2>Spis piosenek</h2>
+    <div id="song-list">Ładowanie spisu piosenek...</div>
+</div>
+
+<div id="viewer">
+    <div id="song-display">
+        <h1>Śpiewnik.fasta</h1>
+        <p>Repozytorium projektu: <a href=https://github.com/Bulia29/spiewnik>klik</a></p>
+        <p>Link do pobrania wersji pdf: <a href=https://github.com/Bulia29/spiewnik/releases>klik</a></p>
+    </div>
+</div>
+
+<script>
+    const manifestUrl = "https://raw.githubusercontent.com/Bulia29/spiewnik/refs/heads/main/song_manifest.json";
+    const baseRawUrl = "https://raw.githubusercontent.com/Bulia29/spiewnik/refs/heads/main/";
+    
+    let allSongs = []; // Global store for parsed songs
+
+    async function init() {
+        try {
+            const resp = await fetch(manifestUrl);
+            const files = await resp.json();
+            const listContainer = document.getElementById('song-list');
+            listContainer.innerHTML = '';
+
+            for (const filePath of files["paths"]) {
+                await loadFastaFile(filePath);
+            }
+
+            allSongs.sort((a, b) => {
+                const titleA = a.title.trim();
+                const titleB = b.title.trim();
+                return titleA.localeCompare(titleB, 'pl', { 
+                    sensitivity: 'base',
+                    ignorePunctuation: true 
+                });
+            });
+
+            addSongLinks()
+
+        } catch (err) {
+            document.getElementById('song-list').innerText = "Error loading manifest.";
+        }
+    }
+
+    async function loadFastaFile(path) {
+        try {
+            const resp = await fetch(baseRawUrl + path);
+            const text = await resp.text();
+            const cleanText = text.replace(/^#.*(\r?\n|$)/gm, '');
+            
+            // Split by ">" to get individual songs (Multi-FASTA format)
+            const entries = cleanText.split(/^>/m).filter(e => e.trim() !== "");
+
+            entries.forEach(entry => {
+                const lines = entry.split('\n');
+                const header = lines.shift(); // First line is "Title | Author"
+                const [title, author] = header.split('|').map(s => s.trim());
+
+                allSongs.push({title, author, body: lines.join("\n")})
+            });
+        } catch (err) {
+            console.error("Error loading file: " + path);
+        }
+    }
+
+    async function addSongLinks() {
+        allSongs.forEach(song => {
+                // Create a clickable link in sidebar
+                const link = document.createElement('a');
+                link.className = 'song-link';
+                link.innerText = song.title;
+                link.onclick = () => displaySong(song);
+                document.getElementById('song-list').appendChild(link);
+        });
+    }
+
+    function displaySong(song) {
+        const container = document.getElementById('song-display');
+        
+        let html = `<h1 class="song-title">${song.title}</h1>`;
+        if (song.author) html += `<p class="song-author">${song.author}</p>`;
+
+
+        for (const paragraph of song.body.split("\n\n").map(s => s.replace(/(^\s*(?!.+)\n+)|(\n+\s+(?!.+)$)/g, ""))) {
+        // for (const paragraph of song.body.split("\n\n")) {
+            lines = [];
+            chords = [];
+            for (const paragraph_line of paragraph.split("\n").map(s => s.trim())) {
+                [line, chord] = paragraph_line.split("|").map(s => s.trim());
+                if (line == "-") {
+                    line = ""
+                }
+                lines.push(line);
+                if (chord) {
+                    chords.push(chord);
+                } else {
+                    chords.push("");
+                }
+            }
+            html += `<div class="paragraph">`
+            if (/^\s/.test(paragraph)) {
+                html += `<div class="chorus-spacer"></div>`
+            }
+            html += `<div class="lyrics">`;
+            for (const line of lines) {
+                html += `<p>${line}</p>`;
+            }
+            html += `</div><div class="chords">`;
+            for (const chord of chords) {
+                html += `<p>${chord}</p>`;
+            }
+            html += `</div></div>`;
+        }
+
+        // song.body.forEach(line => {
+        //     if (line.trim() === "") {
+        //         html += `<br>`;
+        //         return;
+        //     }
+
+        //     // Detect Chorus (indented lines)
+        //     const isChorus = line.startsWith('    ');
+        //     const [lyrics, chords] = line.split('|').map(s => s || "");
+
+            // html += `
+            //     <div class="song-line ${isChorus ? 'chorus' : ''}">
+            //         <div class="lyrics">${lyrics}</div>
+            //         <div class="chords">${chords.trim()}</div>
+            //     </div>`;
+        // });
+
+        container.innerHTML = html;
+    }
+
+    init();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,52 @@
+
+body {
+    font-family: -apple-system, sans-serif;
+    display: flex;
+    margin: 0;
+    height: 100vh;
+    background-color: #212121;
+    color: #eeeeee;
+}
+
+/* Sidebar Menu */
+#sidebar { 
+    width: 300px; background: #303030; border-right: 1px solid #696969; 
+    overflow-y: auto; padding: 20px; 
+}
+#sidebar h2 { font-size: 1.2rem; margin-top: 0; }
+.song-link { 
+    display: block; padding: 5px 0; color: #b4cf9e; text-decoration: none; 
+    cursor: pointer; border-bottom: 1px solid #696969;
+}
+.song-link:hover { text-decoration: underline; }
+
+/* Main Content View */
+#viewer { flex-grow: 1; padding: 40px; overflow-y: auto; }
+.song-title { margin: 0; color: #ffffff; margin-bottom: 10px;}
+.song-author { font-style: italic; color: #b4b4b4; margin-bottom: 30px; }
+
+.paragraph {
+    display: flex;
+    margin: 20px;
+}
+
+.lyrics {
+    color: #ffffff; 
+}
+
+.chords {
+    color: #b4cf9e; 
+    font-weight: bold;
+    font-family: 'Courier New', monospace; /* Keeps spacing consistent */
+    margin-left: 20px;
+}
+
+.chorus-spacer {
+    width: 40px;
+}
+
+.paragraph p {
+    margin: 0;
+    line-height: 1.5;
+    min-height: 1.5em;
+}
