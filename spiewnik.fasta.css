@@ -1,3 +1,7 @@
+@font-face {
+    font-family: MooreComputer;
+    src: url(fonts/moorecomputer.ttf);
+}
 
 body {
     font-family: -apple-system, sans-serif;
@@ -9,9 +13,29 @@ body {
 }
 
 /* Sidebar Menu */
+#sidebar-toggle {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    z-index: 1000;
+    padding: 10px 15px;
+    background: #a6cc83;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.2rem;
+}
+
 #sidebar { 
+    z-index: 1001;
+    transition: transform 0.3s ease;
     width: 300px; background: #303030; border-right: 1px solid #696969; 
     overflow-y: auto; padding: 20px; 
+}
+#sidebar.hidden {
+    transform: translateX(-300px);
+    margin-right: -300px; /* Collapse the space it takes */
 }
 #sidebar h2 { font-size: 1.2rem; margin-top: 0; }
 .song-link { 
@@ -20,14 +44,16 @@ body {
 }
 .song-link:hover { text-decoration: underline; }
 
+.song-list-spacer {height: 80px}
+
 /* Main Content View */
-#viewer { flex-grow: 1; padding: 40px; overflow-y: auto; }
+#viewer { flex-grow: 1; padding: 40px; overflow-y: auto; transition: margin-left 0.3s ease;}
 .song-title { margin: 0; color: #ffffff; margin-bottom: 10px;}
 .song-author { font-style: italic; color: #b4b4b4; margin-bottom: 30px; }
 
 .paragraph {
     display: flex;
-    margin: 20px;
+    margin-bottom: 20px;
 }
 
 .lyrics {
@@ -37,8 +63,14 @@ body {
 .chords {
     color: #b4cf9e; 
     font-weight: bold;
-    font-family: 'Courier New', monospace; /* Keeps spacing consistent */
+    font-family: 'Courier New';
     margin-left: 20px;
+}
+
+.main-heading {
+    font-family: MooreComputer;
+    color: #a6cc83;
+    font-size: 40px;
 }
 
 .chorus-spacer {
@@ -47,6 +79,42 @@ body {
 
 .paragraph p {
     margin: 0;
-    line-height: 1.5;
-    min-height: 1.5em;
+    line-height: 1.3;
+    min-height: 1.3em;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:link {
+    color: #779b5a;
+}
+
+a:visited {
+    color: #ca845b;
+}
+
+a:hover {
+    color: #bff198;
+}
+
+a:active {
+    color: #eeeeee;
+}
+
+@media (max-width: 768px) {
+    #sidebar {
+        position: fixed;
+        height: 100vh;
+        z-index: 999;
+    }
+    #sidebar.hidden {
+        transform: translateX(-100%);
+    }
+    #viewer {padding: 4px};
+    .chorus-spacer {
+        width: 8px;
+    }
+    .chords {margin-left: 4px};
 }
